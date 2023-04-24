@@ -2,9 +2,8 @@ import React from 'react';
 import './Orders.css';
 
 const Orders = props => {
-  console.log('props.order',props.orders)
   let orderEls = null;
-  if (Array.isArray(props.orders) && props.orders.length > 0) {
+  if ( props.orders.length > 0) {
     orderEls = props.orders.map(order => {
       return (
         <div className="order">

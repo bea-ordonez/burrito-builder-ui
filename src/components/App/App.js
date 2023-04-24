@@ -13,15 +13,12 @@ class App extends Component {
   }
 
   componentDidMount() {
-
     getOrders()
       .then(data => {
-        this.setState({orders: data})
-        
+        console.log('data',data)
+        this.setState({orders: data.orders})  
       })
-
       .catch(err => console.error('Error fetching:', err));
-   
   }
 
 
@@ -34,6 +31,7 @@ class App extends Component {
         </header>
 
         <Orders orders={this.state.orders}/>
+
       </main>
     );
   }
