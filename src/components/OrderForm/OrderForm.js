@@ -6,10 +6,32 @@ class OrderForm extends Component {
     this.props = props;
     this.state = {
       name: '',
-      ingredients: []
+      ingredients: [],
+      isValid: false
     };
   }
 
+  handleIngredientChange = event => {
+    const ingredient = event.target.name
+    const ingredients = [...this.state.ingredients, ingredient]
+    this.setState({ ingredients }, () => {
+      if (this.state.name && this.state.ingredients.length > 0) {
+        this.setState({ isValid: true });
+      } else {
+        this.setState({ isValid: false });
+      }
+    });
+  }
+
+  handleNameChange = event => {
+    this.setState({ name: event.target.value }, () => {
+      if (this.state.name && this.state.ingredients.length > 0) {
+        this.setState({ isValid: true });
+      } else {
+        this.setState({ isValid: false });
+      }
+    });
+  }
 
   handleSubmit = e => {
     e.preventDefault();
