@@ -13,6 +13,7 @@ const Orders = props => {
               return <li>{ingredient}</li>
             })}
           </ul>
+          <p>{order.id}</p>
         </div>
       )
     });

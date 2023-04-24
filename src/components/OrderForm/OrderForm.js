@@ -12,6 +12,7 @@ class OrderForm extends Component {
   }
 
   handleIngredientChange = event => {
+    event.preventDefault(event)
     const ingredient = event.target.name
     const ingredients = [...this.state.ingredients, ingredient]
     this.setState({ ingredients }, () => {
@@ -33,14 +34,43 @@ class OrderForm extends Component {
     });
   }
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.clearInputs();
-  }
+
 
   clearInputs = () => {
     this.setState({name: '', ingredients: []});
   }
+  
+  postNewOrder = () => {
+    const newOrder = {
+      name: this.state.name,
+      ingredients: this.state.ingredients
+    };
+    return fetch('http://localhost:3001/api/v1/orders', {
+      method: 'POST',
+      body: JSON.stringify({name: newOrder.name, ingredients: newOrder.ingredients}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+    if (this.state.isValid === true) {
+      this.postNewOrder()
+      .then(response => response.json())
+      .then(data => {
+        if (data["id"]) {
+          this.props.addOrder(data);
+          this.clearInputs();
+          this.setState({isValid: false});
+        }
+      })
+      .catch(error => console.error('Error submitting order:', error));
+    }
+  }
+
+
 
   render() {
     const possibleIngredients = ['beans', 'steak', 'carnitas', 'sofritas', 'lettuce', 'queso fresco', 'pico de gallo', 'hot sauce', 'guacamole', 'jalapenos', 'cilantro', 'sour cream'];
@@ -66,7 +96,7 @@ class OrderForm extends Component {
 
         <p>Order: { this.state.ingredients.join(', ') || 'Nothing selected' }</p>
 
-        <button onClick={e => this.handleSubmit(e)}>
+        <button onClick={event => this.handleSubmit(event)}>
           Submit Order
         </button>
       </form>
